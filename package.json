@@ -1,0 +1,26 @@
+{
+  "name": "mangadex-importer",
+  "version": "0.0.1",
+  "description": "A project to facilitate the importing of other mangas from other sites to MangaDex.",
+  "main": "out/cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PythonCoderAS/mangadex-importer.git"
+  },
+  "author": "PythonCoderAS",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PythonCoderAS/mangadex-importer/issues"
+  },
+  "homepage": "https://github.com/PythonCoderAS/mangadex-importer#readme",
+  "dependencies": {
+    "extensions-gamefuzzy": "file:site-libs/extensions-gamefuzzy",
+    "mangadex-full-api": "^5.8.0"
+  },
+  "devDependencies": {
+    "chalk": "^5.0.0"
+  }
+}

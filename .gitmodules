@@ -1,0 +1,3 @@
+[submodule "site-libs/extensions-gamefuzzy"]
+	path = site-libs/extensions-gamefuzzy
+	url = https://github.com/GameFuzzy/extensions-gamefuzzy.git
