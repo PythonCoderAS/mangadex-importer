@@ -2,9 +2,13 @@
   "name": "mangadex-importer",
   "version": "0.0.1",
   "description": "A project to facilitate the importing of other mangas from other sites to MangaDex.",
-  "main": "out/cli.js",
+  "bin": {
+    "mangadex-importer": "out/src/cli.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cli": "node out/src/cli.js",
+    "build": "tsc -p tsconfig.json && cp -r site-libs/extensions-gamefuzzy/src/BatoTo/external out/site-libs/extensions-gamefuzzy/src/BatoTo"
   },
   "repository": {
     "type": "git",
@@ -17,10 +21,14 @@
   },
   "homepage": "https://github.com/PythonCoderAS/mangadex-importer#readme",
   "dependencies": {
+    "axios": "^0.25.0",
     "extensions-gamefuzzy": "file:site-libs/extensions-gamefuzzy",
-    "mangadex-full-api": "^5.8.0"
+    "mangadex-full-api": "github:PythonCoderAS/mangadex-full-api#master",
+    "sade": "^1.8.1"
   },
   "devDependencies": {
-    "chalk": "^5.0.0"
+    "chalk": "^5.0.0",
+    "paperback-extensions-common": "^4.3.5",
+    "typescript": "^4.5.5"
   }
 }
