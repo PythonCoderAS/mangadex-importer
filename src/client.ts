@@ -1,7 +1,7 @@
 import Manga from "./struct/manga";
 import Parser from "./struct/parser";
 import {Author as MDAuthor, Cover as MDCover, login, Manga as MDManga} from 'mangadex-full-api';
-import {password, username} from '../config.json'
+import {username, password} from '../config.json'
 import {downloadFile, log} from "./utils";
 import Chapter from "./struct/chapter";
 import chalk from "chalk";
