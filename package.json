@@ -25,7 +25,7 @@
     "extensions-gamefuzzy": "file:site-libs/extensions-gamefuzzy",
     "extensions-official": "file:site-libs/extensions-generic/madara",
     "mangadex-full-api": "github:PythonCoderAS/mangadex-full-api#master",
-    "chalk": "^4.1.2",
+    "chalk": "^5.0.0",
     "sade": "^1.8.1"
   },
   "devDependencies": {
