@@ -1,10 +1,11 @@
-import axios from 'axios';
+import axios, {AxiosRequestHeaders} from 'axios';
 import chalk from "chalk";
 
-export async function downloadFile(url: string): Promise<Buffer> {
+export async function downloadFile(url: string, headers?: AxiosRequestHeaders): Promise<Buffer> {
     log("Utils - Downloader", chalk.cyan(`Downloading binary file ${url}.`));
     const response = await axios.get(url, {
-        responseType: 'arraybuffer'
+        responseType: 'arraybuffer',
+        headers: headers
     })
     return Buffer.from(response.data)
 }

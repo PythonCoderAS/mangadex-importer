@@ -15,8 +15,8 @@ export default class Batoto extends Parser {
 
     private readonly mangaIdRegex = new RegExp("https://batotoo.com/series/(\\d+)");
     private readonly chapterIdRegex = new RegExp("https://batotoo.com/chapter/(\\d+)");
-    private readonly volumeChapterRegex = /^Vol(?:ume|\.|)\s*(\d+)\s*(?:Chap|Chapter|Ch\.)\s*(\d+)(\s*[:\- ]\s*([^\s ]+)|)/i
-    private readonly chapterRegex = /^(?:Chap|Chapter|Ch\.)\s*(\d+)(\s*[:\- ]\s*([^\s ]+)|)/i
+    private readonly volumeChapterRegex = /^Vol(?:ume|\.|)\s*(\d+)\s*(?:Chap|Chapter|Ch\.)\s*(\d+)(\s*[:\- ]\s*([\S][\S ]+)|)/i
+    private readonly chapterRegex = /^(?:Chap|Chapter|Ch\.)\s*(\d+)(\s*[:\- ]\s*([\S][\S ]+)|)/i
 
 
     constructor() {
@@ -45,7 +45,7 @@ export default class Batoto extends Parser {
     async parseMangaChapters(url: string): Promise<Chapter[]> {
         const mangaId = url.match(this.mangaIdRegex)![1]
         const paperbackChapters = await this.wrapper.getChapters(this.source, mangaId)
-        return await Promise.all(paperbackChapters.map(async (chapter) => {
+        return await Promise.all(paperbackChapters.map<Promise<Chapter>>(async (chapter) => {
             log("Batoto", chalk.yellow(`Fetching chapter details for ${chapter.id}`))
             const paperbackChapterDetails = await this.wrapper.getChapterDetails(this.source, mangaId, chapter.id)
             const volumeMatch = chapter.name?.match(this.volumeChapterRegex)
@@ -57,22 +57,22 @@ export default class Batoto extends Parser {
             } else if (volumeMatch) {
                 return {
                     pages: paperbackChapterDetails.pages,
-                    volume: parseInt(volumeMatch[1]),
-                    chapter: parseInt(volumeMatch[2]),
-                    name: volumeMatch[4]
+                    volume: Number(volumeMatch[1]),
+                    chapterNum: Number(volumeMatch[2]),
+                    title: volumeMatch[4],
                 }
             } else if (chapterMatch) {
                 return {
                     pages: paperbackChapterDetails.pages,
                     volume: chapter.volume,
-                    chapter: parseInt(chapterMatch[1]),
-                    name: chapterMatch[3]
+                    chapterNum: Number(chapterMatch[1]),
+                    title: chapterMatch[3]
                 }
             } else {
                 return {
                     pages: paperbackChapterDetails.pages,
                     volume: chapter.volume,
-                    chapter: chapter.chapNum,
+                    chapterNum: chapter.chapNum,
                     title: chapter.name,
                 }
             }

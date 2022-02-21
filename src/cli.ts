@@ -4,6 +4,9 @@ import parserMapping from "./parsers";
 import Client from "./client";
 import {Manga} from "mangadex-full-api";
 import {getFilteredChapters, getMultiChapterCliOptions, getSingleChapterCliOptions} from "./cliParsers";
+import {homedir} from "os";
+import {uuid} from "../site-libs/extensions-gamefuzzy/src/MangaPlus/Utility";
+import {mkdir, writeFile} from "fs/promises"
 
 const prog = sade("mangadex-importer")
 prog.version(version);
@@ -11,25 +14,11 @@ prog.version(version);
 parserMapping.forEach((parser) => {
     let place = prog.command(`${parser.name} manga <url>`)
         .describe(`Import a manga from the ${parser.name} parser.`)
-    if (parser.parseMangaChapters) {
-        place = place
-            .option('-c, --chapter', 'Import chapters as well as the manga.')
-            .option('-g, --group', 'Groups to import as, seperated by commas (defaults to no-group).')
-            .option('-r, --range', 'Chapters to import, seperated by commas (defaults to all). Ranges can be defined using "-".')
-    }
-    place.example(`${parser.name} manga <url> -c -g "group-uuid-1,group-uuid-2" -r "1-3,5,7,9-11,12.5"`)
-    place.action(async (url, opts: any) => {
+    place.action(async (url) => {
         const client = new Client(parserMapping.get(parser.name)!);
         const manga = await client.parseManga(url)
         await client.login();
-        const mdManga = await client.submitManga(manga)
-        if (opts.chapter) {
-            const multiChapterOptions = getMultiChapterCliOptions(opts)
-            let chapters = getFilteredChapters(await client.parseMangaChapters(url), multiChapterOptions)
-            for (const chapter of chapters) {
-                await client.submitChapter(chapter, mdManga, multiChapterOptions)
-            }
-        }
+        await client.submitManga(manga)
     });
 
     prog.command(`${parser.name} chapter <mangaId> <url>`)
@@ -46,7 +35,7 @@ parserMapping.forEach((parser) => {
         });
 
     prog.command(`${parser.name} chapters <mangaId> <url>`)
-        .describe(`Import multiple chapter from the ${parser.name} parser.`)
+        .describe(`Import multiple chapters from the ${parser.name} parser.`)
         .option('-g, --group', 'Groups to import as, seperated by commas (defaults to no-group).')
         .option('-r, --range', 'Chapters to import, seperated by commas (defaults to all). Ranges can be defined using "-".')
         .action(async (mangaId, url, opts) => {
@@ -57,6 +46,26 @@ parserMapping.forEach((parser) => {
             let chapters = getFilteredChapters(await client.parseMangaChapters(url), multiChapterOptions)
             for (const chapter of chapters) {
                 await client.submitChapter(chapter, mdManga, multiChapterOptions)
+            }
+        });
+
+    prog.command(`${parser.name} download <url>`)
+        .describe(`Download multiple chapters.`)
+        .option('-r, --range', 'Chapters to import, seperated by commas (defaults to all). Ranges can be defined using "-".')
+        .action(async (url, opts) => {
+            const client = new Client(parserMapping.get(parser.name)!);
+            const downloadFolder = homedir() + "/Downloads/MangaDex Importer/" + uuid().replace(/-/g, "");
+            await mkdir(downloadFolder, {recursive: true})
+            const multiChapterOptions = getMultiChapterCliOptions(opts)
+            let chapters = getFilteredChapters(await client.parseMangaChapters(url), multiChapterOptions)
+            for (let i = 0; i < chapters.length; i++) {
+                await mkdir(downloadFolder + "/" + i, {recursive: true})
+                const pages = await client.downloadChapter(chapters[i])
+                const promises = [];
+                for (let j = 0; j < pages.length; j++) {
+                    promises.push(writeFile(downloadFolder + "/" + i + "/" + j + ".jpg", pages[j]))
+                }
+                await Promise.all(promises)
             }
         });
 })

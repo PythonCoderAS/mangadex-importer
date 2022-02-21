@@ -3,22 +3,30 @@ import {Range, splitOnComma} from "./utils";
 import Chapter from "./struct/chapter";
 
 function getBaseChapterCliOptions(opts: any): BaseOptionalCliOptions {
-    const groupIds = splitOnComma(opts.group || "")
+    let groupIds = splitOnComma(opts.group || "")
+    if (JSON.stringify(groupIds) === '[""]'){
+	    groupIds = [];
+    }
     return {
         groupIds: groupIds.length > 0 ? groupIds : undefined,
     }
 }
 
 export function getMultiChapterCliOptions(opts: any): MultiChapterCliOptions {
-    const chapterParts = splitOnComma(opts.range || "")
+    let chapterParts: string[];
+    if (opts.range){
+        chapterParts = splitOnComma(opts.range)
+    } else {
+	chapterParts = []
+    }
     return {
         ...getBaseChapterCliOptions(opts),
         chapterRanges:
             chapterParts.length > 0
                 ? chapterParts.map((value =>
                     value.includes("-")
-                        ? new Range(...value.split("-").map((num) => Number.parseInt(num)) as [number, number])
-                        : Number.parseInt(value)))
+                        ? new Range(...value.split("-").map((num) => Number(num)) as [number, number])
+                        : Number(value)))
                 : undefined,
     }
 }
@@ -26,8 +34,8 @@ export function getMultiChapterCliOptions(opts: any): MultiChapterCliOptions {
 export function getSingleChapterCliOptions(opts: any): SingleChapterCliOptions {
     return {
         ...getBaseChapterCliOptions(opts),
-        chapterNum: Number.isNaN(opts.num) ? undefined : Number.parseInt(opts.num),
-        volumeNum: Number.isNaN(opts.volume) ? undefined : Number.parseInt(opts.volume),
+        chapterNum: Number.isNaN(opts.num) ? undefined : Number(opts.num),
+        volumeNum: Number.isNaN(opts.volume) ? undefined : Number(opts.volume),
     }
 }
 

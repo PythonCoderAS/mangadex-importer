@@ -5,6 +5,7 @@ import {downloadFile} from "../utils";
 export default abstract class Parser {
 
     abstract name: string;
+    globalHeaders: { [key: string]: string } = {};
 
     abstract parseManga(url: string): Promise<Manga>;
 
@@ -13,6 +14,6 @@ export default abstract class Parser {
     abstract parseChapter(url: string): Promise<Chapter>;
 
     async downloadPage(url: string): Promise<Buffer>{
-        return await downloadFile(url);
+        return await downloadFile(url, this.globalHeaders);
     }
 }
