@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/PythonCoderAS/mangadex-importer#readme",
   "dependencies": {
-    "axios": "^0.25.0",
+    "axios": "^0.26.0",
     "extensions-gamefuzzy": "file:site-libs/extensions-gamefuzzy",
     "extensions-official": "file:site-libs/extensions-generic/madara",
     "mangadex-full-api": "github:PythonCoderAS/mangadex-full-api#master",
