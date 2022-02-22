@@ -5,6 +5,7 @@ import {Range} from "../utils";
  */
 export interface BaseOptionalCliOptions {
     groupIds?: string[];
+    language?: string;
 }
 
 export interface MultiChapterCliOptions extends BaseOptionalCliOptions {

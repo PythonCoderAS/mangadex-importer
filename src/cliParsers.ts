@@ -9,6 +9,7 @@ function getBaseChapterCliOptions(opts: any): BaseOptionalCliOptions {
     }
     return {
         groupIds: groupIds.length > 0 ? groupIds : undefined,
+	language: (opts.language || "") .length > 0 ? opts.language : undefined 
     }
 }
 

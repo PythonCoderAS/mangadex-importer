@@ -24,6 +24,7 @@ parserMapping.forEach((parser) => {
     prog.command(`${parser.name} chapter <mangaId> <url>`)
         .describe(`Import a chapter from the ${parser.name} parser.`)
         .option('-g, --group', 'Groups to import as, seperated by commas (defaults to no-group).')
+	.option('-l, --language', 'The language code to set the chapter as (defaults to en).')
         .option('-n, --num', 'The chapter number to set on MangaDex (overrides default-selected number).')
         .option('-v, --volume', 'The volume number to set on MangaDex (overrides default-selected number).')
         .action(async (mangaId, url, opts) => {
@@ -37,6 +38,7 @@ parserMapping.forEach((parser) => {
     prog.command(`${parser.name} chapters <mangaId> <url>`)
         .describe(`Import multiple chapters from the ${parser.name} parser.`)
         .option('-g, --group', 'Groups to import as, seperated by commas (defaults to no-group).')
+	.option('-l, --language', 'The language code to set the chapter as (defaults to en).')
         .option('-r, --range', 'Chapters to import, seperated by commas (defaults to all). Ranges can be defined using "-".')
         .action(async (mangaId, url, opts) => {
             const client = new Client(parserMapping.get(parser.name)!);

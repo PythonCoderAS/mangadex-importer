@@ -112,7 +112,7 @@ export default class Client {
             volume: chapter.volNum || null,
             chapter: chapter.chapterNum || null,
             title: chapter.title || null,
-            translatedLanguage: "en"
+            translatedLanguage: opts.language || "en"
         }
         if (mdManga.tags.map((tag) => tag.id).includes('0234a31e-a729-4e28-9d6a-3f87c4966b9e')) { // Oneshot tag
             log("MangaDex - Chapter", chalk.yellow(`The manga has the oneshot tag, this chapter will be uploaded as a oneshot...`));
@@ -137,7 +137,7 @@ export default class Client {
             await currentSession.close()
             log("MangaDex - Chapter", chalk.green(`Deleted active upload session.`));
         }
-        log("MangaDex - Chapter", chalk.yellow(`Starting upload session for Volume ${chapterData.volume} Chapter ${chapterData.chapter} (${chapterData.title})...`));
+        log("MangaDex - Chapter", chalk.yellow(`Starting upload session for Volume ${chapterData.volume} Chapter ${chapterData.chapter} (${chapterData.title}) [Language: ${chapterData.translatedLanguage}] ...`));
         const session = await mdManga.createUploadSession(...(opts.groupIds || []))
         log("MangaDex - Chapter", chalk.green(`Upload session started. Session ID: ${session.id}`));
         const pages = chapter.pages;
@@ -172,7 +172,7 @@ export default class Client {
                     }))
                 } catch (e) {
                     const errorStr = String(e);
-                    if (errorStr.includes("EPIPE") || errorStr.includes("ECONNRESET") || errorStr.includes("ECONNREFUSED")) {
+                    if (errorStr.includes("EPIPE") || errorStr.includes("ECONNRESET") || errorStr.includes("ECONNREFUSED") || errorStr.includes("upload_service_exception") || errorStr.includes("socket hang up")) {
                         log("MangaDex - Chapter", chalk.red(`Page upload stopped unexpectedly. Retrying.`));
                         continue;
                     } else {
@@ -196,6 +196,7 @@ export default class Client {
                 return await this.submitChapter(chapter, mdManga, opts)
             }
         }
+	await sleep(1000);
         log("MangaDex - Chapter", chalk.green(`Finished upload session.`));
     }
 }
