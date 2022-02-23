@@ -3,13 +3,13 @@ import {Range, splitOnComma} from "./utils";
 import Chapter from "./struct/chapter";
 
 function getBaseChapterCliOptions(opts: any): BaseOptionalCliOptions {
-    let groupIds = splitOnComma(opts.group || "")
+    let groupIds = splitOnComma(opts.group ?? "")
     if (JSON.stringify(groupIds) === '[""]'){
 	    groupIds = [];
     }
     return {
         groupIds: groupIds.length > 0 ? groupIds : undefined,
-	language: (opts.language || "") .length > 0 ? opts.language : undefined 
+	language: (opts.language ?? "") .length > 0 ? opts.language : undefined 
     }
 }
 
@@ -41,7 +41,7 @@ export function getSingleChapterCliOptions(opts: any): SingleChapterCliOptions {
 }
 
 export function getFilteredChapters(chapters: Chapter[], opts: MultiChapterCliOptions): Chapter[] {
-    if ((opts.chapterRanges?.length || 0) > 0) {
+    if ((opts.chapterRanges?.length ?? 0) > 0) {
         return chapters.filter((chapter) => {
             return opts.chapterRanges!.some((range) => {
                 return chapter.chapterNum

@@ -7,8 +7,8 @@ import Chapter from "../struct/chapter";
 export default class LocalFS extends Parser {
 
     name: string = "localfs";
-    private readonly volumeChapterRegex = /^Vol(?:ume|\.|)\s*(\d+)\s*(?:Chap|Chapter|Ch\.)\s*([\d.]+)(\s*[:\- ]\s*([\S][\S ]+)|)/i
-    private readonly chapterRegex = /^(?:Chap|Chapter|Ch\.)\s*([\d.]+)(\s*[:\- ]\s*([\S][\S ]+)|)/i
+    private readonly volumeChapterRegex = /^Vol(?:ume|\.|)\s*(\d+)\s*(?:Chap|Chapter|Ch\.)\s*([\d.]+)(\s*[:\- ]\s*([\S][\S ]*)|)/i
+    private readonly chapterRegex = /^(?:Chap|Chapter|Ch\.)\s*([\d.]+)(\s*[:\- ]\s*([\S][\S ]*)|)/i
 
     async parseManga(url: string): Promise<Manga> {
         throw Error("Not implemented.");

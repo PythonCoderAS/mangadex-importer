@@ -59,8 +59,8 @@ export default class Client {
             tags.push('0234a31e-a729-4e28-9d6a-3f87c4966b9e')
         }
         log("MangaDex - Manga", chalk.yellow(`Submitting ${manga.name}...`));
-        const mdManga = await MDManga.create({en: manga.name}, manga.originalLanguage || "ja", "ongoing", manga.rating || "pornographic", {
-            altTitles: Object.entries(manga.altNames || {}).reduce<{ [locale: string]: string }[]>((prev, [locale, items]) => {
+        const mdManga = await MDManga.create({en: manga.name}, manga.originalLanguage ?? "ja", "ongoing", manga.rating ?? "pornographic", {
+            altTitles: Object.entries(manga.altNames ?? {}).reduce<{ [locale: string]: string }[]>((prev, [locale, items]) => {
                 return prev.concat(items.map((value) => {
                     const obj: { [key: string]: string } = {};
                     obj[locale] = value;
@@ -109,10 +109,10 @@ export default class Client {
 
     async submitChapter(chapter: Chapter, mdManga: MDManga, opts: BaseOptionalCliOptions & SingleChapterCliOptions): Promise<void> {
         let chapterData: any = {
-            volume: chapter.volNum || null,
-            chapter: chapter.chapterNum || null,
-            title: chapter.title || null,
-            translatedLanguage: opts.language || "en"
+            volume: chapter.volNum ?? null,
+            chapter: chapter.chapterNum ?? null,
+            title: chapter.title ?? null,
+            translatedLanguage: opts.language ?? "en"
         }
         if (mdManga.tags.map((tag) => tag.id).includes('0234a31e-a729-4e28-9d6a-3f87c4966b9e')) { // Oneshot tag
             log("MangaDex - Chapter", chalk.yellow(`The manga has the oneshot tag, this chapter will be uploaded as a oneshot...`));
@@ -138,7 +138,7 @@ export default class Client {
             log("MangaDex - Chapter", chalk.green(`Deleted active upload session.`));
         }
         log("MangaDex - Chapter", chalk.yellow(`Starting upload session for Volume ${chapterData.volume} Chapter ${chapterData.chapter} (${chapterData.title}) [Language: ${chapterData.translatedLanguage}] ...`));
-        const session = await mdManga.createUploadSession(...(opts.groupIds || []))
+        const session = await mdManga.createUploadSession(...(opts.groupIds ?? []))
         log("MangaDex - Chapter", chalk.green(`Upload session started. Session ID: ${session.id}`));
         const pages = chapter.pages;
         const buffers = await Promise.all(pages.map((page) => this.parser.downloadPage(page)));

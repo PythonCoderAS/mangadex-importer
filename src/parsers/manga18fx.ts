@@ -18,7 +18,7 @@ class Manga18FXParser extends MadaraParser {
 
         // For each available chapter..
         for (const obj of $('ul.row-content-chapter > li').toArray()) {
-            const id = ($('a', $(obj)).first().attr('href') || '').replace(`${source.baseUrl}/${source.sourceTraversalPathName}/`, '').replace(/\/$/, '')
+            const id = ($('a', $(obj)).first().attr('href') ?? '').replace(`${source.baseUrl}/${source.sourceTraversalPathName}/`, '').replace(/\/$/, '')
             const chapNum = Number(id.match(/\D*(\d*-?\d*)\D*$/)?.pop()?.replace(/-/g, '.'))
             const chapName = $('a', $(obj)).first().text().trim() ?? ''
 
@@ -71,7 +71,7 @@ class Manga18FXSource extends Madara {
 
         const data = await this.requestManager.schedule(request, 1)
         this.CloudFlareError(data.status)
-        const numericId = (data.data.match(/'manga_id': (\d+)/) || [])[1]
+        const numericId = (data.data.match(/'manga_id': (\d+)/) ?? [])[1]
         if (!numericId) {
             throw new Error(`Failed to parse the numeric ID for ${mangaId}`)
         }
