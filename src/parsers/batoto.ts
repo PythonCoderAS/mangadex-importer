@@ -15,8 +15,8 @@ export default class Batoto extends Parser {
 
     private readonly mangaIdRegex = new RegExp("https://batotoo.com/series/(\\d+)");
     private readonly chapterIdRegex = new RegExp("https://batotoo.com/chapter/(\\d+)");
-    private readonly volumeChapterRegex = /^Vol(?:ume|\.|)\s*(\d+)\s*(?:Chap|Chapter|Ch\.)\s*(\d+)(\s*[:\- ]\s*([\S][\S ]+)|)/i
-    private readonly chapterRegex = /^(?:Chap|Chapter|Ch\.)\s*(\d+)(\s*[:\- ]\s*([\S][\S ]+)|)/i
+    private readonly volumeChapterRegex = /^Vol(?:ume|\.|)\s*(\d+)\s*(?:Chap|Chapter|Ch\.)\s*([\d.]+)(\s*[:\- ]\s*([\S][\S ]+)|)/i
+    private readonly chapterRegex = /^(?:Chap|Chapter|Ch\.)\s*([\d.]+)(\s*[:\- ]\s*([\S][\S ]+)|)/i
 
 
     constructor() {
