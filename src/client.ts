@@ -147,7 +147,7 @@ export default class Client {
         let currentSet: Buffer[] = [];
         for (const buffer of buffers) {
             const bufferLength = buffer.length;
-            if (currentSet.reduce((acc, cur) => acc + cur.length, 0) + bufferLength > 1024 * 1024 * 5 || currentSet.length === 10) { // > 5 MB
+            if (currentSet.reduce((acc, cur) => acc + cur.length, 0) + bufferLength > 1024 * 1024 * 5 || currentSet.length === 10 || currentSet.length >= (buffers.length / 3) ) { // > 5 MB
                 sets.push(currentSet);
                 currentSet = [];
             }
