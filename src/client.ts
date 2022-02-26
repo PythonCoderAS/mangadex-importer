@@ -6,6 +6,7 @@ import {downloadFile, log} from "./utils";
 import Chapter from "./struct/chapter";
 import chalk from "chalk";
 import {BaseOptionalCliOptions, SingleChapterCliOptions} from "./struct/optionalCliOptions";
+import ConcurrentPriorityWorkerQueue from "concurrent-priority-worker-queue";
 
 // const MDUtil = require("mangadex-full-api/src/util")
 const MDUploadSession = require("mangadex-full-api/src/internal/uploadsession")
@@ -155,36 +156,39 @@ export default class Client {
         if (currentSet.length > 0) {
             sets.push(currentSet);
         }
-        const pageIDs = [];
+        const pageIDs: string[] = [];
         let pagesRemaining = pages.length;
-        while (sets.length > 0) {
-            const toUpload = sets.splice(0, 1)[0]!;
-            log("MangaDex - Chapter", chalk.yellow(`Uploading ${toUpload.length} pages...`));
-            let pageIDsResolved: string[] = [];
-            while (true) {
-                try {
-                    pageIDsResolved = await session.uploadPages(toUpload.map((buffer) => {
-                        return {
-                            name: "page.png",
-                            type: "png",
-                            data: buffer
+        const queue = new ConcurrentPriorityWorkerQueue({
+            worker: async (toUpload: Buffer[]) => {
+                log("MangaDex - Chapter", chalk.yellow(`Uploading ${toUpload.length} pages...`));
+                let pageIDsResolved: string[] = [];
+                while (true) {
+                    try {
+                        pageIDsResolved = await session.uploadPages(toUpload.map((buffer) => {
+                            return {
+                                name: "page.png",
+                                type: "png",
+                                data: buffer
+                            }
+                        }))
+                    } catch (e) {
+                        const errorStr = String(e);
+                        if (errorStr.includes("EPIPE") || errorStr.includes("ECONNRESET") || errorStr.includes("ECONNREFUSED") || errorStr.includes("upload_service_exception") || errorStr.includes("socket hang up")) {
+                            log("MangaDex - Chapter", chalk.red(`Page upload stopped unexpectedly. Retrying.`));
+                            continue;
+                        } else {
+                            throw e;
                         }
-                    }))
-                } catch (e) {
-                    const errorStr = String(e);
-                    if (errorStr.includes("EPIPE") || errorStr.includes("ECONNRESET") || errorStr.includes("ECONNREFUSED") || errorStr.includes("upload_service_exception") || errorStr.includes("socket hang up")) {
-                        log("MangaDex - Chapter", chalk.red(`Page upload stopped unexpectedly. Retrying.`));
-                        continue;
-                    } else {
-                        throw e;
                     }
+                    break;
                 }
-                break;
-            }
-            pageIDs.push(...pageIDsResolved)
-            pagesRemaining -= toUpload.length;
-            log("MangaDex - Chapter", chalk.green(`Finished uploading pages. ${pagesRemaining} pages remaining.`));
-        }
+                pagesRemaining -= toUpload.length;
+                log("MangaDex - Chapter", chalk.green(`Finished uploading pages. ${pagesRemaining} pages remaining.`));
+                return pageIDsResolved;
+            },
+            limit: 3
+        });
+        (await Promise.all(sets.map((set) => queue.enqueue(set, 0)))).reduce((acc, cur) => acc.concat(cur), []).forEach((pageID) => pageIDs.push(pageID));
         log("MangaDex - Chapter", chalk.yellow(`Finishing upload session...`));
         // log("MangaDex - Chapter - Debug", chalk.gray(`Chapter Data: ${JSON.stringify(chapterData, null, 4)}`));
         try {
@@ -196,7 +200,7 @@ export default class Client {
                 return await this.submitChapter(chapter, mdManga, opts)
             }
         }
-	await sleep(1000);
+        await sleep(1000);
         log("MangaDex - Chapter", chalk.green(`Finished upload session.`));
     }
 }
