@@ -173,7 +173,12 @@ export default class Client {
                         }))
                     } catch (e) {
                         const errorStr = String(e);
-                        if (errorStr.includes("EPIPE") || errorStr.includes("ECONNRESET") || errorStr.includes("ECONNREFUSED") || errorStr.includes("upload_service_exception") || errorStr.includes("socket hang up")) {
+                        if (errorStr.includes("EPIPE")
+                            || errorStr.includes("ECONNRESET")
+                            || errorStr.includes("ECONNREFUSED")
+                            || errorStr.includes("upload_service_exception")
+                            || errorStr.includes("socket hang up")
+                            || errorStr.includes("Backend fetch failed")) {
                             log("MangaDex - Chapter", chalk.red(`Page upload stopped unexpectedly. Retrying.`));
                             continue;
                         } else {
