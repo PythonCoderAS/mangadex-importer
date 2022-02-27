@@ -25,11 +25,13 @@
     "chalk": "^4.1.2",
     "concurrent-priority-worker-queue": "^2.0.0",
     "mangadex-full-api": "github:md-y/mangadex-full-api",
-    "sade": "^1.8.1"
+    "sade": "^1.8.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/chai": "^4.3.0",
     "@types/cheerio": "0.22.21",
+    "@types/uuid": "^8.3.4",
     "paperback-extensions-common": "^4.3.5",
     "typescript": "^4.5.5"
   }
