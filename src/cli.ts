@@ -5,7 +5,7 @@ import Client from "./client";
 import {Manga} from "mangadex-full-api";
 import {getFilteredChapters, getMultiChapterCliOptions, getSingleChapterCliOptions} from "./cliParsers";
 import {homedir} from "os";
-import {uuid} from "../site-libs/extensions-gamefuzzy/src/MangaPlus/Utility";
+import { v4 } from "uuid";
 import {mkdir, writeFile} from "fs/promises"
 
 const auth = require("mangadex-full-api/src/auth");
@@ -63,7 +63,7 @@ parserMapping.forEach((parser) => {
         .option('-r, --range', 'Chapters to import, seperated by commas (defaults to all). Ranges can be defined using "-".')
         .action(async (url, opts) => {
             const client = new Client(parserMapping.get(parser.name)!);
-            const downloadFolder = homedir() + "/Downloads/MangaDex Importer/" + uuid().replace(/-/g, "");
+            const downloadFolder = homedir() + "/Downloads/MangaDex Importer/" + v4().replace(/-/g, "");
             await mkdir(downloadFolder, {recursive: true})
             const multiChapterOptions = getMultiChapterCliOptions(opts)
             let chapters = getFilteredChapters(await client.parseMangaChapters(url), multiChapterOptions)
