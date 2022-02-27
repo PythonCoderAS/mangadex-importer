@@ -1,7 +1,0 @@
-[submodule "site-libs/extensions-gamefuzzy"]
-	path = site-libs/extensions-gamefuzzy
-	url = https://github.com/GameFuzzy/extensions-gamefuzzy.git
-[submodule "site-libs/extensions-generic/madara"]
-	path = site-libs/extensions-generic/madara
-	url = https://github.com/Paperback-iOS/extensions-generic.git
-	branch = madara
