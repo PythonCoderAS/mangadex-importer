@@ -8,6 +8,8 @@ import {homedir} from "os";
 import {uuid} from "../site-libs/extensions-gamefuzzy/src/MangaPlus/Utility";
 import {mkdir, writeFile} from "fs/promises"
 
+const auth = require("mangadex-full-api/src/auth");
+
 const prog = sade("mangadex-importer")
 prog.version(version);
 
@@ -46,7 +48,12 @@ parserMapping.forEach((parser) => {
             const mdManga = await Manga.get(mangaId, false)
             const multiChapterOptions = getMultiChapterCliOptions(opts)
             let chapters = getFilteredChapters(await client.parseMangaChapters(url), multiChapterOptions)
+            let startTime = Date.now().valueOf()
             for (const chapter of chapters) {
+                if (Date.now().valueOf() - startTime > 1000 * 60 * 10) {
+                    startTime = Date.now().valueOf()
+                    await auth.refreshToken()
+                }
                 await client.submitChapter(chapter, mdManga, multiChapterOptions)
             }
         });

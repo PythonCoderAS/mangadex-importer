@@ -64,15 +64,12 @@ export default class Batoto extends Parser {
             } else if (chapterMatch) {
                 return {
                     pages: paperbackChapterDetails.pages,
-                    volNum: chapter.volume,
                     chapterNum: Number(chapterMatch[1]),
                     title: chapterMatch[3]
                 }
             } else {
                 return {
                     pages: paperbackChapterDetails.pages,
-                    volNum: chapter.volume,
-                    chapterNum: chapter.chapNum,
                     title: chapter.name,
                 }
             }

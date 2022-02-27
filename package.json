@@ -26,7 +26,7 @@
     "concurrent-priority-worker-queue": "^2.0.0",
     "extensions-gamefuzzy": "file:site-libs/extensions-gamefuzzy",
     "extensions-official": "file:site-libs/extensions-generic/madara",
-    "mangadex-full-api": "^5.10.0",
+    "mangadex-full-api": "github:md-y/mangadex-full-api",
     "sade": "^1.8.1"
   },
   "devDependencies": {
