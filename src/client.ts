@@ -147,7 +147,7 @@ export default class Client {
         let currentSet: Buffer[] = [];
         for (const buffer of buffers) {
             const bufferLength = buffer.length;
-            if (currentSet.reduce((acc, cur) => acc + cur.length, 0) + bufferLength > 1024 * 1024 * 5 || currentSet.length === 10 || currentSet.length >= (buffers.length / 3) ) { // > 5 MB
+            if (currentSet.reduce((acc, cur) => acc + cur.length, 0) + bufferLength > 1024 * 1024 * 5 || currentSet.length === 10 || currentSet.length >= (buffers.length / 5) ) { // > 5 MB
                 sets.push(currentSet);
                 currentSet = [];
             }
@@ -191,7 +191,7 @@ export default class Client {
                 log("MangaDex - Chapter", chalk.green(`Finished uploading pages. ${pagesRemaining} pages remaining.`));
                 return pageIDsResolved;
             },
-            limit: 3
+            limit: 5
         });
         (await Promise.all(sets.map((set) => queue.enqueue(set, 0)))).reduce((acc, cur) => acc.concat(cur), []).forEach((pageID) => pageIDs.push(pageID));
         log("MangaDex - Chapter", chalk.yellow(`Finishing upload session...`));
