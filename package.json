@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/PythonCoderAS/mangadex-importer#readme",
   "dependencies": {
-    "axios": "^0.26.1",
+    "axios": "^0.27.0",
     "chalk": "^4.1.2",
     "concurrent-priority-worker-queue": "^2.0.0",
     "extensions-gamefuzzy": "file:site-libs/extensions-gamefuzzy",
