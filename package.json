@@ -31,7 +31,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.1",
+    "@types/chai": "^4.3.2",
     "@types/cheerio": "0.22.21",
     "@types/uuid": "^8.3.4",
     "paperback-extensions-common": "^4.3.5",
